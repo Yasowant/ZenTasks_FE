@@ -13,8 +13,6 @@ export function NavBar() {
   const location = useLocation();
   const { user } = useAuth();
 
-  console.log(user);
-
   const isActive = (path: string) => location.pathname === path;
 
   // Links only shown when NOT logged in
