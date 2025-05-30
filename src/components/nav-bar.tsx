@@ -42,7 +42,7 @@ export function NavBar() {
           <Logo />
         </div>
 
-        {/* Desktop Navigation */}
+       
         <nav className="hidden md:flex items-center gap-6">
           {!user &&
             navLinks.map((link) => (

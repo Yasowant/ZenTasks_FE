@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle,
   Plus,
@@ -17,14 +17,13 @@ import {
   MoreHorizontal,
   Moon,
   Sun,
-} from 'lucide-react';
-import { CreateProjectModal } from '@/components/CreateProjectModal';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/AppSidebar';
-import { SidebarInset } from '@/components/ui/sidebar';
-import { useAuth } from '@/contexts/AuthContext';
+} from "lucide-react";
+import { CreateProjectModal } from "@/components/CreateProjectModal";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -32,23 +31,23 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([
     {
       id: 1,
-      name: 'Website Redesign',
-      description: 'Complete overhaul of company website',
-      color: 'bg-purple-500',
+      name: "Website Redesign",
+      description: "Complete overhaul of company website",
+      color: "bg-purple-500",
       tasks: 8,
       completed: 3,
       members: 4,
-      dueDate: '2024-02-15',
+      dueDate: "2024-02-15",
     },
     {
       id: 2,
-      name: 'Mobile App',
-      description: 'iOS and Android app development',
-      color: 'bg-blue-500',
+      name: "Mobile App",
+      description: "iOS and Android app development",
+      color: "bg-blue-500",
       tasks: 12,
       completed: 7,
       members: 6,
-      dueDate: '2024-03-20',
+      dueDate: "2024-03-20",
     },
   ]);
 
@@ -63,11 +62,11 @@ const Dashboard = () => {
       tasks: projectData.tasks?.length || 0,
       completed: 0,
       members: 1,
-      dueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date().toISOString().split("T")[0],
     };
     setProjects([...projects, newProject]);
     toast({
-      title: 'Project created successfully!',
+      title: "Project created successfully!",
       description: `${projectData.title} has been added to your projects.`,
     });
   };
@@ -75,7 +74,6 @@ const Dashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen transition-colors duration-300 flex w-full ">
-        <AppSidebar projects={projects} />
         <SidebarInset>
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -221,7 +219,7 @@ const Dashboard = () => {
                             </div>
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 mr-1" />
-                              Due{' '}
+                              Due{" "}
                               {new Date(project.dueDate).toLocaleDateString()}
                             </div>
                           </div>
