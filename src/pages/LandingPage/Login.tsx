@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,9 @@ import { Github, Linkedin } from 'lucide-react';
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
   signInWithRedirect,
+  signInWithPopup,
   getRedirectResult,
 } from 'firebase/auth';
 import { auth, googleProvider, githubProvider } from '@/lib/firebase';
@@ -29,7 +31,11 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle redirect result after user comes back from OAuth provider
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsLoading(true);
+  };
+
   useEffect(() => {
     getRedirectResult(auth)
       .then((result) => {
@@ -57,13 +63,6 @@ const Login = () => {
       });
   }, [navigate]);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoading(true);
-    // Your email/password login logic here (not implemented in this snippet)
-    setIsLoading(false);
-  };
-
   const handleSocialLogin = async (providerName: string) => {
     try {
       let provider;
@@ -74,7 +73,18 @@ const Login = () => {
         return;
       }
 
-      await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+
+      const credential =
+        providerName === 'Google'
+          ? GoogleAuthProvider.credentialFromResult(result)
+          : GithubAuthProvider.credentialFromResult(result);
+      toast.success(`${providerName} login successful!`);
+
+      console.log('credential', credential);
+      localStorage.setItem('accessToken', JSON.stringify(credential.idToken));
+
+      navigate('/home');
     } catch (error) {
       const err = error as FirebaseError;
       toast.error(err.message || 'Login failed');
