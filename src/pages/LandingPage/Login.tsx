@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -9,25 +9,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import { Github, Linkedin } from "lucide-react";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+import { Github, Linkedin } from 'lucide-react';
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
-} from "firebase/auth";
-import { auth, googleProvider, githubProvider } from "@/lib/firebase";
-import { FirebaseError } from "firebase/app";
+} from 'firebase/auth';
+import { auth, googleProvider, githubProvider } from '@/lib/firebase';
+import { FirebaseError } from 'firebase/app';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -38,29 +38,28 @@ const Login = () => {
     try {
       let provider;
       let accessToken: string | undefined;
-      ``;
-      if (providerName === "Google") provider = googleProvider;
-      else if (providerName === "GitHub") provider = githubProvider;
+      if (providerName === 'Google') provider = googleProvider;
+      else if (providerName === 'GitHub') provider = githubProvider;
       else {
-        toast.error("LinkedIn is not supported.");
+        toast.error('LinkedIn is not supported.');
         return;
       }
 
       const result = await signInWithPopup(auth, provider);
 
       const credential =
-        providerName === "Google"
+        providerName === 'Google'
           ? GoogleAuthProvider.credentialFromResult(result)
           : GithubAuthProvider.credentialFromResult(result);
       toast.success(`${providerName} login successful!`);
 
-      console.log("credential", credential);
-      localStorage.setItem("accessToken", JSON.stringify(credential.idToken));
+      console.log('credential', credential);
+      localStorage.setItem('accessToken', JSON.stringify(credential.idToken));
 
-      navigate("/home");
+      navigate('/home');
     } catch (error) {
       const err = error as FirebaseError;
-      toast.error(err.message || "Login failed");
+      toast.error(err.message || 'Login failed');
     }
   };
 
@@ -80,7 +79,7 @@ const Login = () => {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => handleSocialLogin("Google")}
+              onClick={() => handleSocialLogin('Google')}
             >
               <svg
                 className="mr-2 h-4 w-4"
@@ -109,7 +108,7 @@ const Login = () => {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => handleSocialLogin("GitHub")}
+              onClick={() => handleSocialLogin('GitHub')}
             >
               <Github className="mr-2 h-4 w-4" />
               GitHub
@@ -118,7 +117,7 @@ const Login = () => {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => handleSocialLogin("LinkedIn")}
+            onClick={() => handleSocialLogin('LinkedIn')}
           >
             <Linkedin className="mr-2 h-4 w-4" />
             LinkedIn
@@ -171,13 +170,13 @@ const Login = () => {
               className="w-full bg-gradient-to-r from-zen-blue to-zen-purple hover:opacity-90"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <Link to="/register" className="text-primary hover:underline">
               Sign up
             </Link>
