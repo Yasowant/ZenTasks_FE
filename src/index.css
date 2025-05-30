@@ -1,6 +1,5 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Noto+Sans&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +35,7 @@
     --ring: 240 5% 65%;
 
     --radius: 0.5rem;
-    
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -96,7 +95,12 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
   }
 }
@@ -105,13 +109,11 @@
   .hero-gradient {
     @apply bg-gradient-to-br from-zen-blue via-zen-purple to-zen-pink;
   }
-  
+
   .card-hover {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
 }
-
-
 
 @layer base {
   * {
@@ -120,4 +122,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@theme {
+  --font-notosansx: "Noto Sans", sans-serif;
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
 }
