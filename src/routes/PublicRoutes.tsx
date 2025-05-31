@@ -1,4 +1,5 @@
 import { MainLayout } from '@/layouts/main-layout';
+
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 const LandingPage = lazy(() => import('../pages/LandingPage/Index'));
@@ -7,6 +8,7 @@ const Register = lazy(() => import('../pages/LandingPage/Register'));
 const Pricing = lazy(() => import('../pages/LandingPage/Pricing'));
 const Privacy = lazy(() => import('../pages/Privacy'));
 const Terms = lazy(() => import('../pages/Terms'));
+const Profile = lazy(() => import('../pages/Profile'));
 
 const PublicRoutes: RouteObject[] = [
   {
@@ -38,6 +40,10 @@ const PublicRoutes: RouteObject[] = [
   {
     path: '/terms',
     element: <Terms />,
+  },
+  {
+    path: '/profile',
+    element: <Profile />,
   },
 ];
 

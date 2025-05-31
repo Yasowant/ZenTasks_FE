@@ -1,9 +1,10 @@
-import { setSidebarItems, SidebarItem } from "@/store/slice/sidebarSlice";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { RootState } from "@/store/Store";
-import noQuotesFound from "../assets/images/noQuotesFound.png";
+import { setSidebarItems, SidebarItem } from '@/store/slice/sidebarSlice';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { RootState } from '@/store/Store';
+import noQuotesFound from '../assets/images/noQuotesFound.png';
+import { useAuth } from '@/contexts/AuthContext';
 interface Post {
   userId: number;
   id: number;
@@ -15,6 +16,9 @@ const Home = () => {
   const dispatch = useDispatch();
   const [selectedData, setSelectedData] = useState<Post | null>(null);
   const [selectedIds, setSelectedId] = useState<number | null>(null);
+
+  const { user } = useAuth();
+  console.log(user);
 
   const selectedId = useSelector(
     (state: RootState) => state.groups.selectedGroupId
@@ -29,7 +33,7 @@ const Home = () => {
   const getData = async () => {
     try {
       const res = await axios.get<Post[]>(
-        "https://jsonplaceholder.typicode.com/posts?_limit=10"
+        'https://jsonplaceholder.typicode.com/posts?_limit=10'
       );
       const sidebarItems: SidebarItem[] = res.data.map((post) => ({
         id: post.id.toString(),
@@ -39,7 +43,7 @@ const Home = () => {
 
       dispatch(setSidebarItems(sidebarItems));
     } catch (error) {
-      console.error("Error fetching posts", error);
+      console.error('Error fetching posts', error);
     }
   };
 
@@ -54,7 +58,7 @@ const Home = () => {
 
       setSelectedData(res.data);
     } catch (error) {
-      console.error("Error fetching selected post", error);
+      console.error('Error fetching selected post', error);
     }
   };
 

@@ -1,27 +1,82 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
+import { useQuery } from '@apollo/client';
+import { GET_PROFILE_QUERY } from '@/graphql/mutations/profile';
+import { jwtDecode } from 'jwt-decode'; // make sure this import is correct
 
-const AuthContext = createContext<{ user: User | null; loading: boolean }>({
+interface DecodedToken {
+  userId?: string;
+  id?: string;
+  sub?: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  error: Error | null;
+}
+
+const AuthContext = createContext<AuthContextType>({
   user: null,
-  loading: true,
+  loading: false,
+  error: null,
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [shouldQuery, setShouldQuery] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+    const token = localStorage.getItem('accessToken');
+    console.log('Token from localStorage:', token); // 🔥 Print token
 
-    return () => unsubscribe();
+    if (token) {
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        console.log('Decoded token:', decoded); // 🔥 Print decoded token
+
+        const id = decoded.userId || decoded.id || decoded.sub || null;
+        console.log('Extracted userId:', id); // 🔥 Print extracted userId
+
+        setUserId(id);
+        if (id) setShouldQuery(true);
+      } catch (err) {
+        console.error('Invalid token error:', err); // 🔥 Print error
+        setUserId(null);
+      }
+    } else {
+      console.warn('No token found in localStorage'); // 🔥 Warn no token
+    }
   }, []);
 
+  const { loading, data, error } = useQuery(GET_PROFILE_QUERY, {
+    variables: { id: userId },
+    skip: !shouldQuery,
+  });
+
+  console.log('Apollo useQuery loading:', loading); // 🔥 Print loading state
+  console.log('Apollo useQuery data:', data); // 🔥 Print data
+  console.log('Apollo useQuery error:', error); // 🔥 Print error if any
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider
+      value={{
+        user: data?.getUser ?? null,
+        loading,
+        error: error ?? null,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

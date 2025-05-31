@@ -43,13 +43,12 @@ const App: React.FC = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <AuthProvider>
-          <BrowserRouter>
-            <Suspense fallback={<h1>Loding</h1>}>
-              <RoutesFiles allRoutes={allRouteFiles} />
-            </Suspense>
-          </BrowserRouter>
-        </AuthProvider>
+
+        <BrowserRouter>
+          <Suspense fallback={<h1>Loding</h1>}>
+            <RoutesFiles allRoutes={allRouteFiles} />
+          </Suspense>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
