@@ -18,6 +18,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { Github, Linkedin } from 'lucide-react';
 import { FirebaseError } from 'firebase/app';
+import { useMutation } from '@apollo/client';
+import { REGISTER_MUTATION } from '@/graphql/mutations/register';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -27,22 +29,45 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const [register] = useMutation(REGISTER_MUTATION);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     if (!agreed) {
       toast.error('You must agree to the terms and conditions');
       return;
     }
 
-    setIsLoading(true);
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
 
-    // Simulate registration request
-    setTimeout(() => {
+    try {
+      setIsLoading(true);
+
+      const { data } = await register({
+        variables: { name, email, password },
+      });
+
+      console.log('Register data:', data); // DEBUG
+
+      if (data?.register?.success) {
+        toast.success('Registration successful! Redirecting...');
+        setTimeout(() => navigate('/login'), 1500);
+      } else {
+        toast.error(data?.register?.message || 'Registration failed');
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Registration failed');
+      }
+    } finally {
       setIsLoading(false);
-      toast.success('Registration successful! Redirecting...');
-      // In a real app, you'd redirect the user after successful registration
-    }, 1500);
+    }
   };
 
   const handleSocialSignup = async (providerName: string) => {

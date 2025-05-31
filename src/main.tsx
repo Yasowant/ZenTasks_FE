@@ -1,11 +1,17 @@
-import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import { Provider } from "react-redux";
-import {store} from "./store/Store.tsx";
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
 
-createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+import { Provider } from 'react-redux';
+import { store } from './store/Store.tsx';
+
+import { ApolloProvider } from '@apollo/client';
+import client from './lib/apolloClient'; // make sure this path exists
+
+createRoot(document.getElementById('root')!).render(
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </ApolloProvider>
 );

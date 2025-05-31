@@ -24,6 +24,8 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider, githubProvider } from '@/lib/firebase';
 import { FirebaseError } from 'firebase/app';
+import { useMutation } from '@apollo/client';
+import { LOGIN_MUTATION } from '@/graphql/mutations/login';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,9 +33,35 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [login] = useMutation(LOGIN_MUTATION);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
+
+    try {
+      const { data } = await login({ variables: { email, password } });
+      console.log(data);
+
+      if (data?.login?.token) {
+        // Save tokens in localStorage or cookies as needed
+        localStorage.setItem('accessToken', data.login.token);
+        localStorage.setItem('refreshToken', data.login.refreshToken);
+
+        toast.success('Login successful!');
+        navigate('/home');
+      } else {
+        toast.error('Login failed: No token returned');
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || 'Login failed');
+      } else {
+        toast.error('An unexpected error occurred during login');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
